@@ -15,7 +15,7 @@
  */
 
 metadata {
-        definition (name: "TKBHOME Z-Wave Plug", namespace: "ocdc", author: "ocdc") {
+        definition (name: "TKBHOME Outlet", namespace: "ocdc", author: "ocdc") {
                 capability "Switch"
                 capability "Refresh"
                 capability "Indicator"

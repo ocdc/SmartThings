@@ -14,7 +14,7 @@
  *
  */
 metadata {
-		definition (name: "Virtual Switch to Luminance", namespace: "ocdc", author: "ocdc") {
+		definition (name: "Virtual Switch to Illuminance", namespace: "ocdc", author: "ocdc") {
 		
 	    capability "Sensor"
 	    capability "Actuator"

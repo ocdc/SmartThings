@@ -35,7 +35,7 @@
  *
  */
 metadata {
-	definition (name: "NodOn Octan Remote & Wall Switch", namespace: "ocdc", author: "ocdc") {
+	definition (name: "NodOn Switch", namespace: "ocdc", author: "ocdc") {
 		capability "Actuator"
 		capability "Button"
 		capability "Holdable Button"
