@@ -1,5 +1,8 @@
 /**
  *
+ *  Shutter
+ *  Copyright 2017 ocdc
+ *
  *	Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  *	in compliance with the License. You may obtain a copy of the License at:
  *
@@ -12,7 +15,7 @@
  */
 
 metadata {
-	definition (name: "Shutter", namespace: "krlaframboise", author: "Kevin LaFramboise") {
+	definition (name: "Shutter", namespace: "ocdc", author: "ocdc") {
 		capability "Actuator"
 		capability "Sensor"
 		capability "Configuration"

@@ -31,9 +31,10 @@
  *  Button 4 double Tap is mapped to   "Button 8 Pushed" in Smartlighting
  *  Button 4 Hold Rlease is mapped to  "Button 8 Hold"   in Smartlighting
  *
- *  Further modifications by wosl
+ *  Version 1.1 - Further modifications by ocdc
  *
  */
+
 metadata {
 	definition (name: "NodOn Switch", namespace: "ocdc", author: "ocdc") {
 		capability "Actuator"

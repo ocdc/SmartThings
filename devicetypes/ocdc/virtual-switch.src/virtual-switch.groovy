@@ -1,7 +1,7 @@
 /**
  *
  *  Virtual Switch
- *  Copyright 2017 wosl
+ *  Copyright 2017 ocdc
  *
  *  Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  *  in compliance with the License. You may obtain a copy of the License at:
@@ -13,6 +13,7 @@
  *  for the specific language governing permissions and limitations under the License.
  *
  */
+
 metadata {
 	definition (name: "Virtual Switch", namespace: "ocdc", author: "ocdc") {
 		capability "Actuator"

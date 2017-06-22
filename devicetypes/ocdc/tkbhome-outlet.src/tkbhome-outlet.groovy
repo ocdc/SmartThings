@@ -1,6 +1,6 @@
 /**
- *  TKBHOME Z-Wave Plug - TZ68E
  *
+ *  TKBHOME Z-Wave Plug - TZ68E
  *  Copyright 2016 Soon Chye
  *
  *  Unless required by applicable law or agreed to in writing, software distributed under the License is distributed
@@ -10,7 +10,8 @@
  *  By default the LED is set to 'Night-Light' mode, which means the LED is ON when the device is OFF. 
  *  To change this so the LED is OFF when the device is OFF, set parameter 1 to 1.
  *
- *  Ver1.0 - First release
+ *  Version 1.0 - First release
+ *  Version 1.1 - Tweaks made by ocdc
  * 
  */
 
