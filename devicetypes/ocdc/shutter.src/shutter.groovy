@@ -25,14 +25,14 @@ metadata {
 		
 		command "shutdown"
 		command "reboot"
-        command "logoff"
-        command "lock"
-        command "sleep"
-        command "hibernate"
-        command "monitorOff"
-        command "screenSaver"
-        command "mute"
-        command "unmute"
+        	command "logoff"
+        	command "lock"
+        	command "sleep"
+        	command "hibernate"
+        	command "monitorOff"
+        	command "screenSaver"
+        	command "mute"
+        	command "unmute"
 	}
 
 	preferences {
@@ -62,6 +62,7 @@ metadata {
 				state "off", label: '${currentValue}', action: "switch.on", icon: "st.switches.switch.off", backgroundColor: "#ffffff"
 				state "on", label: '${currentValue}', action: "switch.off", icon: "st.switches.switch.on", backgroundColor: "#79b821"
 		}
+		
 		standardTile("refresh", "device.power", inactiveLabel: false, decoration: "flat", width: 2, height: 2) {
 			state "default", label:'', action:"refresh.refresh", icon:"st.secondary.refresh"
 		}
