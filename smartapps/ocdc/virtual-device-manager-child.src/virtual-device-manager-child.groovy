@@ -16,14 +16,14 @@
  */
 definition(
     name: "Virtual Device Manager Child",
-    namespace: "wosl",
-    parent: "wosl:Virtual Device Manager",
-    author: "wosl",
+    namespace: "ocdc",
+    parent: "ocdc:Virtual Device Manager",
+    author: "ocdc",
     description: "Virtual Device Manager Child SmartApp to create new virtual devices.",
     category: "My Apps",
-    iconUrl: "https://s3.amazonaws.com/smartapp-icons/Convenience/Cat-Convenience.png",
-    iconX2Url: "https://s3.amazonaws.com/smartapp-icons/Convenience/Cat-Convenience@2x.png",
-    iconX3Url: "https://s3.amazonaws.com/smartapp-icons/Convenience/Cat-Convenience@2x.png")
+    iconUrl: "https://github.com/wosl/SmartThings/raw/master/SmartApps/VirtualDeviceManager/icon.png",
+    iconX2Url: "https://github.com/wosl/SmartThings/raw/master/SmartApps/VirtualDeviceManager/icon@2x.png",
+    iconX3Url: "https://github.com/wosl/SmartThings/raw/master/SmartApps/VirtualDeviceManager/icon@3x.png")
 
 
 preferences {
@@ -73,7 +73,7 @@ def initialize() {
 def spawnChildDevice(deviceLabel, deviceType) {
     app.updateLabel(deviceLabel)
     if (!childCreated()) {
-        def child = addChildDevice("wosl", deviceType, getDeviceID(), null, [name: getDeviceID(), label: deviceLabel, completedSetup: true])
+        def child = addChildDevice("ocdc", deviceType, getDeviceID(), null, [name: getDeviceID(), label: deviceLabel, completedSetup: true])
     }
 }
 
