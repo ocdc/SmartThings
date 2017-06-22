@@ -34,8 +34,8 @@
  *****************************************************************************************************************/
 definition(
     name: "InfluxDB Logger",
-    namespace: "wosl",
-    author: "wosl",
+    namespace: "ocdc",
+    author: "ocdc",
     description: "Log SmartThings device states to InfluxDB",
     category: "My Apps",
     iconUrl: "https://github.com/wosl/SmartThings/raw/master/SmartApps/InfluxDbLogger/icon.png",
