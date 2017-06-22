@@ -1,5 +1,5 @@
 /**
- *  Virtual Device Manager - Child
+ *  Virtual Device Manager
  *
  *  Copyright 2015 Brian Keifer
  *	Modified 2017 wosl
@@ -16,14 +16,14 @@
  */
  definition(
     name: "Virtual Device Manager",
-    namespace: "wosl",
-    author: "wosl",
+    namespace: "ocdc",
+    author: "ocdc",
     description: "Create virtual devices for use in routines and other SmartApps",
     category: "My Apps",
     singleInstance: true,
-    iconUrl: "https://s3.amazonaws.com/smartapp-icons/Convenience/Cat-Convenience.png",
-    iconX2Url: "https://s3.amazonaws.com/smartapp-icons/Convenience/Cat-Convenience@2x.png",
-    iconX3Url: "https://s3.amazonaws.com/smartapp-icons/Convenience/Cat-Convenience@2x.png"
+    iconUrl: "https://github.com/wosl/SmartThings/raw/master/SmartApps/VirtualDeviceManager/icon.png",
+    iconX2Url: "https://github.com/wosl/SmartThings/raw/master/SmartApps/VirtualDeviceManager/icon@2x.png",
+    iconX3Url: "https://github.com/wosl/SmartThings/raw/master/SmartApps/VirtualDeviceManager/icon@3x.png"
 )
 
 preferences {
