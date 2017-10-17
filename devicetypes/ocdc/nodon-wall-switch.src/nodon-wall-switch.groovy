@@ -6,6 +6,7 @@
  *  Can be made to work with 4 types of click however only push (pushType 0) and hold (pushType 2) are currently used.
  *
  *  Changelog:
+ *  1.1.1 - Removed central scene references
  *  1.1 - Fixed layout and removed central scene
  *  1.0 - First release
  *
