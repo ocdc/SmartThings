@@ -20,7 +20,7 @@
  */
  
 metadata {
-	definition (name: "NodOn Wall Switch (CWS-3-1-01)", namespace: "ocdc", author: "ocdc") {
+	definition (name: "NodOn Wall Switch", namespace: "ocdc", author: "ocdc") {
 		capability "Actuator"
 		capability "Button"
 		capability "Configuration"
