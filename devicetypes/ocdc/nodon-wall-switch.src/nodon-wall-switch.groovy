@@ -50,13 +50,13 @@ metadata {
 		}
         standardTile("buttonOne", "device.button", width: 2, height: 2)
         {
-          state "default", label: "1", action: "pushButtonOne", defaultState: true, backgroundColor: "#ffa81e"
-          state "pushed", label: "1", action: "pushButtonOne", backgroundColor: "#79b821"
+            state "default", label: "1", action: "pushButtonOne", defaultState: true, backgroundColor: "#ffa81e"
+            state "pushed", label: "1", action: "pushButtonOne", backgroundColor: "#79b821"
         }
         standardTile("buttonTwo", "device.button", width: 2, height: 2)
         {
-          state "default", label: "2", action: "pushButtonTwo", defaultState: true, backgroundColor: "#ffa81e"
-          state "pushed", label: "2", action: "pushButtonTwo", backgroundColor: "#79b821"
+            state "default", label: "2", action: "pushButtonTwo", defaultState: true, backgroundColor: "#ffa81e"
+            state "pushed", label: "2", action: "pushButtonTwo", backgroundColor: "#79b821"
         }
         standardTile("buttonThree", "device.button", width: 2, height: 2)
         {
@@ -107,7 +107,7 @@ def parse(String description)
 	} 
     else 
     {
-		def cmd = zwave.parse(description, [0x5B: 1, 0x80: 1, 0x84: 1]) // central scene, battery, wake up
+		def cmd = zwave.parse(description, [0x80: 1, 0x84: 1]) // battery, wake up
 		if(cmd) results += zwaveEvent(cmd)
 		if(!results) results = [descriptionText: cmd, displayed: false]
 	}
@@ -135,15 +135,6 @@ def zwaveEvent(physicalgraph.zwave.commands.wakeupv1.WakeUpNotification cmd)
     
 	results << response(zwave.wakeUpV1.wakeUpNoMoreInformation().format())
 	return results
-}
-
-def zwaveEvent(physicalgraph.zwave.commands.centralscenev1.CentralSceneNotification cmd) 
-{
-    Integer sceneNumber = cmd.sceneNumber as Integer
-	Integer keyAttributes = cmd.keyAttributes as Integer
-    Integer sequenceNumber = cmd.sequenceNumber as Integer
-
-	buttonEvent(sceneNumber, keyAttributes)
 }
 
 def zwaveEvent(physicalgraph.zwave.commands.sceneactivationv1.SceneActivationSet cmd) {
