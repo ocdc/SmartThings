@@ -32,7 +32,6 @@
  *  Button 4 Hold Rlease is mapped to  "Button 8 Hold"   in Smartlighting
  *
  *  Version 1.1 - Further modifications by ocdc
- *
  */
 
 metadata {
