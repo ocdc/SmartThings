@@ -1,5 +1,5 @@
 /*****************************************************************************************************************
- *  Copyright: David Lomas (codersaur)
+ *  Copyright: David Lomas (codersaur)1
  *
  *  Name: Z-Wave Tweaker
  *
