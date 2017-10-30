@@ -49,25 +49,45 @@ metadata {
 				attributeState "batteryLevel", label:'${currentValue} % battery', unit:"%"
 			}
 		}
-        standardTile("buttonOne", "device.button", width: 2, height: 2)
+        standardTile("pushButtonOne", "device.button", width: 2, height: 2)
         {
             state "default", label: "1", action: "pushButtonOne", defaultState: true, backgroundColor: "#ffa81e"
             state "pushed", label: "1", action: "pushButtonOne", backgroundColor: "#79b821"
         }
-        standardTile("buttonTwo", "device.button", width: 2, height: 2)
+        standardTile("pushButtonTwo", "device.button", width: 2, height: 2)
         {
             state "default", label: "2", action: "pushButtonTwo", defaultState: true, backgroundColor: "#ffa81e"
             state "pushed", label: "2", action: "pushButtonTwo", backgroundColor: "#79b821"
         }
-        standardTile("buttonThree", "device.button", width: 2, height: 2)
+        standardTile("pushButtonThree", "device.button", width: 2, height: 2)
         {
             state "default", label: "3", action: "pushButtonThree", defaultState: true, backgroundColor: "#ffa81e"
             state "pushed", label: "3", action: "pushButtonThree", backgroundColor: "#79b821"
         }
-        standardTile("buttonFour", "device.button", width: 2, height: 2)
+        standardTile("pushButtonFour", "device.button", width: 2, height: 2)
         {
             state "default", label: "4", action: "pushButtonFour", defaultState: true, backgroundColor: "#ffa81e"
             state "pushed", label: "4", action: "pushButtonFour", backgroundColor: "#79b821"
+        }
+        standardTile("holdButtonOne", "device.button", width: 2, height: 2)
+        {
+            state "default", label: "1", action: "pushButtonOne", defaultState: true, backgroundColor: "#ffa81e"
+            state "pushed", label: "1", action: "pushButtonOne", backgroundColor: "#00a0dc"
+        }
+        standardTile("holdButtonTwo", "device.button", width: 2, height: 2)
+        {
+            state "default", label: "2", action: "pushButtonTwo", defaultState: true, backgroundColor: "#ffa81e"
+            state "pushed", label: "2", action: "pushButtonTwo", backgroundColor: "#00a0dc"
+        }
+        standardTile("holdButtonThree", "device.button", width: 2, height: 2)
+        {
+            state "default", label: "3", action: "pushButtonThree", defaultState: true, backgroundColor: "#ffa81e"
+            state "pushed", label: "3", action: "pushButtonThree", backgroundColor: "#00a0dc"
+        }
+        standardTile("holdButtonFour", "device.button", width: 2, height: 2)
+        {
+            state "default", label: "4", action: "pushButtonFour", defaultState: true, backgroundColor: "#ffa81e"
+            state "pushed", label: "4", action: "pushButtonFour", backgroundColor: "#00a0dc"
         }
         standardTile("refresh", "generic", inactiveLabel: false, decoration: "flat", width: 2, height: 2) 
         {
@@ -77,8 +97,12 @@ metadata {
         {
 			state "configure", label:'', action:"configuration.configure", icon:"st.secondary.configure"
         }
+        valueTile("blank", "device.text", width: 2, height: 2)
+        {
+			state "val", label:'', defaultState: true
+		}
 		main "button" 
-		details(["button", "buttonOne", "buttonTwo", "refresh", "buttonThree", "buttonFour", "configure"])
+		details(["button", "pushButtonOne", "pushButtonTwo", "refresh", "pushButtonThree", "pushButtonFour", "configure", "holdButtonOne", "holdButtonTwo", "blank", "holdButtonThree", "holdButtonFour", "blank"])
 	}
 }
 
