@@ -25,8 +25,9 @@ metadata {
 		capability "Actuator"
 		capability "Button"
 		capability "Configuration"
-		capability "Sleep Sensor"
 		capability "Battery"
+        
+        attribute "label", "string"
 
 		command "pushButtonOne"
 		command "pushButtonTwo"
@@ -37,7 +38,7 @@ metadata {
 		command	"buttonPushed", [int]
 		command	"refresh"
 
-    fingerprint deviceId: "0x0101", inClusters: "0x5E,0x85,0x59,0x80,0x5B,0x70,0x5A,0x72,0x73,0x86,0x84,0xEF,0x5E,0x5B,0x2B,0x27,0x22,0x20,0x26,0x84"
+    	fingerprint deviceId: "0x0101", inClusters: "0x5E,0x85,0x59,0x80,0x5B,0x70,0x5A,0x72,0x73,0x86,0x84,0xEF,0x5E,0x5B,0x2B,0x27,0x22,0x20,0x26,0x84"
 	}
     
 	tiles(scale: 2) {
@@ -49,89 +50,77 @@ metadata {
 				attributeState "batteryLevel", label:'${currentValue} % battery', unit:"%"
 			}
 		}
-        standardTile("pushButtonOne", "device.button", width: 2, height: 2)
-        {
+        standardTile("pushButtonOne", "device.button", width: 2, height: 2) {
             state "default", label: "1", action: "pushButtonOne", defaultState: true, backgroundColor: "#ffa81e"
             state "pushed", label: "1", action: "pushButtonOne", backgroundColor: "#79b821"
         }
-        standardTile("pushButtonTwo", "device.button", width: 2, height: 2)
-        {
+        standardTile("pushButtonTwo", "device.button", width: 2, height: 2) {
             state "default", label: "2", action: "pushButtonTwo", defaultState: true, backgroundColor: "#ffa81e"
             state "pushed", label: "2", action: "pushButtonTwo", backgroundColor: "#79b821"
         }
-        standardTile("pushButtonThree", "device.button", width: 2, height: 2)
-        {
+        standardTile("pushButtonThree", "device.button", width: 2, height: 2) {
             state "default", label: "3", action: "pushButtonThree", defaultState: true, backgroundColor: "#ffa81e"
             state "pushed", label: "3", action: "pushButtonThree", backgroundColor: "#79b821"
         }
-        standardTile("pushButtonFour", "device.button", width: 2, height: 2)
-        {
+        standardTile("pushButtonFour", "device.button", width: 2, height: 2) {
             state "default", label: "4", action: "pushButtonFour", defaultState: true, backgroundColor: "#ffa81e"
             state "pushed", label: "4", action: "pushButtonFour", backgroundColor: "#79b821"
         }
-        standardTile("holdButtonOne", "device.button", width: 2, height: 2)
-        {
+        standardTile("holdButtonOne", "device.button", width: 2, height: 2) {
             state "default", label: "1", action: "pushButtonOne", defaultState: true, backgroundColor: "#ffa81e"
             state "pushed", label: "1", action: "pushButtonOne", backgroundColor: "#00a0dc"
         }
-        standardTile("holdButtonTwo", "device.button", width: 2, height: 2)
-        {
+        standardTile("holdButtonTwo", "device.button", width: 2, height: 2) {
             state "default", label: "2", action: "pushButtonTwo", defaultState: true, backgroundColor: "#ffa81e"
             state "pushed", label: "2", action: "pushButtonTwo", backgroundColor: "#00a0dc"
         }
-        standardTile("holdButtonThree", "device.button", width: 2, height: 2)
-        {
+        standardTile("holdButtonThree", "device.button", width: 2, height: 2) {
             state "default", label: "3", action: "pushButtonThree", defaultState: true, backgroundColor: "#ffa81e"
             state "pushed", label: "3", action: "pushButtonThree", backgroundColor: "#00a0dc"
         }
-        standardTile("holdButtonFour", "device.button", width: 2, height: 2)
-        {
+        standardTile("holdButtonFour", "device.button", width: 2, height: 2) {
             state "default", label: "4", action: "pushButtonFour", defaultState: true, backgroundColor: "#ffa81e"
             state "pushed", label: "4", action: "pushButtonFour", backgroundColor: "#00a0dc"
         }
-        standardTile("refresh", "generic", inactiveLabel: false, decoration: "flat", width: 2, height: 2) 
-        {
+        valueTile(name:"battery", attribute:"device.battery", inactiveLabel: false, decoration: "flat", width: 2, height: 2) {
+			state "battery", label:'${currentValue}% battery', unit:""
+		}
+        standardTile("refresh", "generic", inactiveLabel: false, decoration: "flat", width: 2, height: 2) {
 			state "default", label:'', action: "refresh", icon:"st.secondary.refresh"
         }
-        standardTile("configure", "device.Configuration", decoration: "flat", width: 2, height: 2) 
-        {
+        standardTile("configure", "device.Configuration", decoration: "flat", width: 2, height: 2) {
 			state "configure", label:'', action:"configuration.configure", icon:"st.secondary.configure"
         }
-        valueTile("blank", "device.text", width: 2, height: 2)
-        {
-			state "val", label:'', defaultState: true
+        valueTile("pushLabel", "device.label", width: 2, height: 4, inactiveLabel: false, decoration: "flat") {
+			state "default", label:'Simulate\nSwitch\nPush'
+		}
+        valueTile("holdLabel", "device.label", width: 2, height: 4, inactiveLabel: false, decoration: "flat") {
+			state "default", label:'Simulate\nSwitch\nHold'
 		}
 		main "button" 
-		details(["button", "pushButtonOne", "pushButtonTwo", "refresh", "pushButtonThree", "pushButtonFour", "configure", "holdButtonOne", "holdButtonTwo", "blank", "holdButtonThree", "holdButtonFour", "blank"])
+		details(["button", "pushButtonOne", "pushButtonTwo", "pushLabel", "pushButtonThree", "pushButtonFour","holdButtonOne", "holdButtonTwo", "holdLabel", "holdButtonThree", "holdButtonFour", "refresh", "configure", "battery"])
 	}
 }
 
-def initialize() 
-{
+def initialize() {
     state.configureRefresh = 0
     state.batteryRefresh = 0
 }
 
-def installed() 
-{
+def installed() {
     initialize()
 }
 
-def updated() 
-{
+def updated() {
     initialize()
 }
 
-def parse(String description) 
-{
+def parse(String description) {
 	def results = []
     
-	if (description.startsWith("Err")) 
-    {
+	if (description.startsWith("Err")) {
 	    results = createEvent(descriptionText:description, displayed:true)
-	} 
-    else 
-    {
+	} else {
 		def cmd = zwave.parse(description, [0x80: 1, 0x84: 1]) // battery, wake up
 		if(cmd) results += zwaveEvent(cmd)
 		if(!results) results = [descriptionText: cmd, displayed: false]
@@ -139,20 +128,17 @@ def parse(String description)
 	return results
 }
 
-def zwaveEvent(physicalgraph.zwave.commands.wakeupv1.WakeUpNotification cmd) 
-{
+def zwaveEvent(physicalgraph.zwave.commands.wakeupv1.WakeUpNotification cmd) {
 	def results = [createEvent(descriptionText: "$device.displayName woke up", isStateChange: false)]
 	def prevBattery = device.currentState("battery")
     
-   	if (!prevBattery || (new Date().time - prevBattery.date.time) / 60000 >= 60 * 53 || state.batteryRefresh == 1)
-	{
+   	if (!prevBattery || (new Date().time - prevBattery.date.time) / 60000 >= 60 * 53 || state.batteryRefresh == 1) {
 		results << response(zwave.batteryV1.batteryGet().format())
         createEvent(name: "battery", value: "10", descriptionText: "battery is now ${currentValue}%", isStateChange: true, displayed: true)
         state.batteryRefresh == 0
 	}
     
-    if (state.configureRefresh == 1)
-    {
+    if (state.configureRefresh == 1) {
 		results << response(zwave.configurationV1.configurationSet(parameterNumber: 8, scaledConfigurationValue: 3).format())
 		results << response(zwave.associationV1.associationSet(groupingIdentifier: 1, nodeId:zwaveHubNodeId).format())
 		state.configureRefresh = 0
@@ -165,76 +151,59 @@ def zwaveEvent(physicalgraph.zwave.commands.wakeupv1.WakeUpNotification cmd)
 def zwaveEvent(physicalgraph.zwave.commands.sceneactivationv1.SceneActivationSet cmd) {
     Integer button = (cmd.sceneId / 10) as Integer
     Integer pressType = cmd.sceneId - (button * 10) as Integer
-    
 	buttonEvent(button, pressType)
 }
 
-def zwaveEvent(physicalgraph.zwave.commands.batteryv1.BatteryReport cmd)
-{
+def zwaveEvent(physicalgraph.zwave.commands.batteryv1.BatteryReport cmd) {
 	def map = [ name: "battery", unit: "%" ]
-	if (cmd.batteryLevel == 0xFF) 
-    {
+	if (cmd.batteryLevel == 0xFF) {
 		map.value = 1
 		map.descriptionText = "${device.displayName} has a low battery"
-	} 
-    else 
-    {
+	} else {
 		map.value = cmd.batteryLevel
 	}
 	createEvent(map)
 }
 
-def zwaveEvent(physicalgraph.zwave.Command cmd) 
-{
+def zwaveEvent(physicalgraph.zwave.Command cmd) {
 	[descriptionText: "$device.displayName: $cmd", linkText: device.displayName, displayed: false]
 }
 
-def buttonEvent(button, pressType) 
-{
+def buttonEvent(button, pressType) {
     button = button as Integer
     pressType = pressType as Integer
     
-	if (pressType == 0) // pushed
-    {
+	if (pressType == 0) { // pushed
     	createEvent(name: "button", value: "pushed", data: [buttonNumber: button, action: "pushed"], descriptionText: "$device.displayName button $button was pressed", isStateChange: true, displayed: true)
-    }
-    else if (pressType == 2) // held
-    {
+    } else if (pressType == 2) { // held
     	createEvent(name: "button", value: "pushed", data: [buttonNumber: button, action: "held"], descriptionText: "$device.displayName button $button was held", isStateChange: true, displayed: true)
     }
 }
 
-def buttonPushed(button) 
-{
+def buttonPushed(button) {
 	sendEvent(name: "button", value: "pushed", data: [buttonNumber: button, action: "pushed"], descriptionText: "$device.displayName virtual button $button was pressed", isStateChange: true)
 }
 
-def refresh()
-{
+def refresh() {
 	state.batteryRefresh = 1
 }
 
-def configure() 
-{
+def configure() {
 	state.configureRefresh = 1
 }
 
-def pushButtonOne() 
-{
+def pushButtonOne() {
 	buttonPushed(1)
 }
 
-def pushButtonTwo() 
-{
+def pushButtonTwo() {
 	buttonPushed(2)
 }
 
-def pushButtonThree() 
-{
+def pushButtonThree() {
 	buttonPushed(3)
 }
 
-def pushButtonFour() 
-{
+def pushButtonFour() {
 	buttonPushed(4)
 }
