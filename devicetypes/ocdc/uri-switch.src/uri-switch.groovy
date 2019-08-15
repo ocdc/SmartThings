@@ -19,7 +19,7 @@ preferences {
 }
 
 metadata {
-	definition (name: "URI Switch", namespace: "tguerena", author: "Troy Guerena") {
+	definition (name: "URI Switch", namespace: "ocdc", author: "Troy Guerena") {
 		capability "Actuator"
 			capability "Switch"
 			capability "Sensor"
