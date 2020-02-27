@@ -37,7 +37,7 @@ Note:  Refresh intentionally left off.
 */ 
 
 metadata {
-	definition (name: "Blink Motion Detector through IFTTT", namespace: "djg", author: "djgutheinz") {
+	definition (name: "Blink Camera", namespace: "ocdc", author: "djgutheinz") {
 		capability "Switch"
 		capability "Refresh"
 		capability "Motion Sensor"
