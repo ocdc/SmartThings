@@ -23,8 +23,9 @@ definition(
     author: "OC",
     description: "Nanoleaf Management SmartApp",
     category: "Convenience",
-    iconUrl: "http://stevethegeek.net/smartthings/aurora/aurora-on.png",
-    iconX2Url: "http://stevethegeek.net/smartthings/aurora/aurora-on.png",
+    iconUrl: "https://github.com/ocdc/SmartThings/raw/master/smartapps/ocdc/nanoleaf-management.src/icon.png",
+    iconX2Url: "https://github.com/ocdc/SmartThings/raw/master/smartapps/ocdc/nanoleaf-management.src/icon-2x.png",
+    iconX3Url: "https://github.com/ocdc/SmartThings/raw/master/smartapps/ocdc/nanoleaf-management.src/icon-3x.png",
     pausable: false
 )
 
