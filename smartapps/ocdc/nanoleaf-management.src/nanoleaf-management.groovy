@@ -1,10 +1,6 @@
 /**
  *
- *  Nanoleaf Setup Info and Control
- *
- *  Version 1.0 December 3, 2019
- *
- *  Author: Melinda Little 2019
+ *  Nanoleaf Management SmartApp v1.1
  *
  *  Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  *  in compliance with the License. You may obtain a copy of the License at:
@@ -15,6 +11,16 @@
  *  on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License
  *  for the specific language governing permissions and limitations under the License.
  *
+ */
+ 
+ /* Todo List
+	1. Set IP with update device ID
+    2. Set port
+    3. Rename pages
+    4. Add all data to info page
+    5. Make logging more consistant
+    6. Remove scene favorites (not used for anything really)
+    7. Refactor and optimise DTH
  */
 
 definition(
@@ -30,14 +36,19 @@ definition(
 )
 
 preferences {
-    page(name: "displayDetails", title: "Nanoleaf Management")
+    page(name: "displayDetails")
     page(name: "pickScene", title: "Select a Scene")   
-    page(name: "getAPI", title: "Get API Key")
-    page(name: "cleanAPI", title: "Clear API Key")
+    page(name: "pageGetApi", title: "Get API Key")
+    page(name: "pageClearApi", title: "Clear API Key")
     page(name: "setScene", title: "Scene Set")    
     page(name: "newLeaf", title: "Nanoleaf Selection")
     page(name: "leafStatus", title: "Nanoleaf Information")
     page(name: "idPanels", title: "Panel Identification")
+    page(name: "pageMissingData", title: "Missing Data")
+    page(name: "pageAcknowledgements", title: "Acknowledgements")
+    page(name: "pageSetupHelp", title: "Setup Help")
+    page(name: "pageRefresh", title: "Refresh")
+    page(name: "pageClearPresetsAndPanelIds", title: "Clear Presets and IDs")
 }
 
 def installed() {
@@ -46,7 +57,6 @@ def installed() {
 
 def updated() {
 	log.debug "Updated with settings: ${settings}"
-
 	unsubscribe()
 }
 
@@ -66,24 +76,34 @@ def displayDetails() {
         }
     
    		return dynamicPage(name: "displayDetails", uninstall: true, install: true) {
-         	section ("${theNanoleaf.name} Actions"){
+        	section ("${theNanoleaf.name} Selected"){
+        		href(name: "leafChange", title: "Select a Different Nanoleaf", required: false, page: "newLeaf", description: "Tap to change Nanoleafs", image: "https://github.com/ocdc/SmartThings/raw/master/smartapps/ocdc/nanoleaf-management.src/menu-icons/select.png")
+        	}
+         	section ("Actions"){
          	  	if (presetsMap && presetsMap.name.size() > 0) {
-		      		href(name: "sceneSelect",title: "Activate a Scene", required: false, page: "pickScene", description: "Tap to select a scene")
-              	}
-              	
-                href(name: "panels",title: "Identify Panels", required: false, page: "idPanels", description: "Tap to identify panels")
-                href(name: "leafStats",title: "View ${theNanoleaf.name} Information ", required: false, page: "leafStatus", description: "Tap to view ${theNanoleaf.name} information")
-                href(name: "APIset",title: "Get an API Key", required: false,page: "getAPI", description: "Tap to get an API Key")
-                href(name: "APIclear",title: "Clear the API Key", required: false,page: "clearAPI", description: "Tap to clear the API Key")
-            	href(name: "leafChange",title: "Select a Different Nanoleaf", required: false, page: "newLeaf", description: "Tap to change Nanoleafs")                
-         	}    
+		      		href(name: "sceneSelect", title: "Activate a Scene", required: false, page: "pickScene", description: "Tap to select a scene", image: "https://github.com/ocdc/SmartThings/raw/master/smartapps/ocdc/nanoleaf-management.src/menu-icons/activate.png")
+                    href(name: "panels", title: "Identify Panels", required: false, page: "idPanels", description: "Tap to identify panels", image: "https://github.com/ocdc/SmartThings/raw/master/smartapps/ocdc/nanoleaf-management.src/menu-icons/identify.png")
+              	} else {
+                	href(name: "pageMissingData", title: "Missing Data", required: false, page: "pageMissingData", description: "Tap for more information", image: "https://github.com/ocdc/SmartThings/raw/master/smartapps/ocdc/nanoleaf-management.src/menu-icons/warning.png")
+                }
+                href(name: "leafStats", title: "View ${theNanoleaf.name} Information", required: false, page: "leafStatus", description: "Tap to view ${theNanoleaf.name} information", image: "https://github.com/ocdc/SmartThings/raw/master/smartapps/ocdc/nanoleaf-management.src/menu-icons/information.png")
+            }
+            section ("Settings"){
+                href(name: "pageSetApi", title: "Get an API Key", required: false, page: "pageGetApi", description: "Tap to get an API Key", image: "https://github.com/ocdc/SmartThings/raw/master/smartapps/ocdc/nanoleaf-management.src/menu-icons/get-key.png")
+                href(name: "pageClearApi", title: "Clear the API Key", required: false, page: "pageClearApi", description: "Tap to clear the API Key", image: "https://github.com/ocdc/SmartThings/raw/master/smartapps/ocdc/nanoleaf-management.src/menu-icons/clear.png")
+            	href(name: "pageRefresh", title: "Refresh Data", required: false, page: "pageRefresh", description: "Tap to refresh data", image: "https://github.com/ocdc/SmartThings/raw/master/smartapps/ocdc/nanoleaf-management.src/menu-icons/refresh.png")
+                href(name: "pageClearPresetsAndPanelIds", title: "Clear Presets and IDs", required: false, page: "pageClearPresetsAndPanelIds", description: "Tap to clear Presets and IDs", image: "https://github.com/ocdc/SmartThings/raw/master/smartapps/ocdc/nanoleaf-management.src/menu-icons/clear.png")
+            }
+            section ("Help"){
+                href(name: "pageAcknowledgements", title: "Acknowledgements", required: false, page: "pageAcknowledgements", description: "", image: "https://github.com/ocdc/SmartThings/raw/master/smartapps/ocdc/nanoleaf-management.src/menu-icons/acknowledgements.png")
+                href(name: "pageSetupHelp", title: "Setup Help", required: false, page: "pageSetupHelp", description: "", image: "https://github.com/ocdc/SmartThings/raw/master/smartapps/ocdc/nanoleaf-management.src/menu-icons/help.png")
+         	}
      	}
     } 
 }
 
 def pickScene() {
     def presetsMap = new groovy.json.JsonSlurper().parseText(theNanoleaf.currentValue("presets"))
-
    	return dynamicPage(name: "pickScene", nextPage: "setScene") {
          section ("${theNanoleaf.name} Scenes"){
               input name: "selectedScene", type: "enum", options: presetsMap.name, description: "Select the Scene to Activate", defaultValue: "" , required: no
@@ -100,17 +120,35 @@ def setScene() {
     }
 }
 
-def getAPI() {
+def pageClearPresetsAndPanelIds() {
+	log.debug "Clearing Scenes and Panel IDs"
+    theNanoleaf.clearPresetsAndPanelIds()
+   	return dynamicPage(name: "pageClearPresetsAndPanelIds", nextPage: "displayDetails") {
+    	section("All scenes and Panel IDs have been cleared, a data refresh will be needed sync current data"){
+        }
+    }
+}
+
+def pageRefresh() {
+	log.debug "Refresh data"
+    theNanoleaf.refresh()
+   	return dynamicPage(name: "pageRefresh", nextPage: "displayDetails") {
+    	section("A request to get current data has been sent"){
+        }
+    }
+}
+
+def pageGetApi() {
     theNanoleaf.requestAPIkey()
-   	return dynamicPage(name: "getAPI", nextPage: "displayDetails") {
+   	return dynamicPage(name: "pageGetApi", nextPage: "displayDetails") {
         section ("An API Key for then ${theNanoleaf.name} has been requested"){
         }
     }
 }
 
-def clearAPI() {
+def pageClearApi() {
     theNanoleaf.clearApiKey()
-   	return dynamicPage(name: "clearAPI", nextPage: "displayDetails") {
+   	return dynamicPage(name: "pageClearApi", nextPage: "displayDetails") {
         section ("The API Key for the ${theNanoleaf.name} has been removed"){
         } 
     }
@@ -160,6 +198,31 @@ def idPanels() {
     return dynamicPage(name: "idPanels", title: "${theNanoleaf.name} Panel Identification", nextPage: "displayDetails") {
         section ("${theNanoleaf.name} Panels") {
             paragraph pageText
+        }
+    }
+}
+
+private pageMissingData() {
+	return dynamicPage(name: "pageMissingData", title: "Missing Data", nextPage: "displayDetails") {
+        section() {
+            paragraph "Data hasn't been fully loaded yet, assuming the details are correct you can use the refresh option to force a data refresh"
+        }
+    }
+}
+
+private pageSetupHelp() {
+	return dynamicPage(name: "pageSetupHelp", title: "Setup Help", nextPage: "displayDetails") {
+        section() {
+            paragraph "To get setup there are a few steps:"
+            paragraph "1. "
+        }
+    }
+}
+
+private pageAcknowledgements() {
+	return dynamicPage(name: "pageAcknowledgements", title: "Acknowledgements", nextPage: "displayDetails") {
+        section() {
+            paragraph "Just a streamlined version of this: https://github.com/Mellit7/NanoleafAuroraHandler"
         }
     }
 }
