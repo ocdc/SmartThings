@@ -52,7 +52,7 @@ preferences {
     page(name: "pageSetupHelp", title: "Setup Help")
     page(name: "pageRefresh", title: "Refresh")
     page(name: "pageClearScenesAndPanelIds", title: "Clear Scenes and IDs")
-    page(name: "pageSetRefreshPeriod", title: "Set Update Delay")
+    page(name: "pageSetRefreshPeriod", title: "Set Refresh Period")
     page(name: "pageSetRefreshPeriodConfirm", title: "Confirm Set Update Delay")
 }
 
@@ -155,7 +155,7 @@ def pageSetRefreshPeriod() {
 		currentTimerDelay = selectedDevice.currentValue("timerDelay")
     }
     
-    return dynamicPage(name: "pageSetRefreshPeriod", title: "Select Delay", nextPage: "pageSetRefreshPeriodConfirm") {
+    return dynamicPage(name: "pageSetRefreshPeriod", title: "Select Refresh Period", nextPage: "pageSetRefreshPeriodConfirm") {
         section(""){
             input name: "timerDelay", type: "enum", options: delayList, title: "Tap to select", defaultValue: currentTimerDelay, required: no
         }
@@ -164,8 +164,8 @@ def pageSetRefreshPeriod() {
 
 def pageSetRefreshPeriodConfirm() {
 	selectedDevice.setTimerDelay(timerDelay)
-    return dynamicPage(name: "pageSetRefreshPeriodConfirm", title: "Delay Set" nextPage: "pageMain") {
-        section("Timer delay has been set to ${timerDelay}"){
+    return dynamicPage(name: "pageSetRefreshPeriodConfirm", title: "Refresh Period", nextPage: "pageMain") {
+        section("Refresh period has been set to ${timerDelay}"){
         }
     }
 }
@@ -198,16 +198,21 @@ def pageInformation() {
     def scene1 = selectedDevice.currentValue("scene1")
     def scene2 = selectedDevice.currentValue("scene2")
     def scene3 = selectedDevice.currentValue("scene3")
-    def curScene = selectedDevice.currentValue("scene")
-    def curDeviceInfo = selectedDevice.currentValue("IPinfo")
-    def curAPI = selectedDevice.currentValue("retrievedAPIkey")
-    def curAPIStatus = selectedDevice.currentValue("apiKeyStatus")
+    def currentScene = selectedDevice.currentValue("scene")
+    def deviceInfo = selectedDevice.currentValue("IPinfo")
+    def apiKey = selectedDevice.currentValue("retrievedAPIkey")
+    def apiStatus = selectedDevice.currentValue("apiKeyStatus")
+    def timerDelay = selectedDevice.currentValue("timerDelay")
+    def sceneList = selectedDevice.currentValue("scenesList")
+    def panelIds = selectedDevice.currentValue("panelIds")
 
     return dynamicPage(name: "pageInformation", title: "Nanoleaf Information", nextPage: "pageMain") {
         section ("${selectedDevice.name} Status Information") {
-            paragraph "Device Info:  ${curDeviceInfo}\nRetrieved API Key:  ${curAPI}\nAPI Status:  ${curAPIStatus}" 
-            paragraph "Curent scene: ${curScene}"  
-            paragraph "Scene 1: ${scene1}\nScene 2: ${scene2}\nScene 3: ${scene3}" 
+            paragraph "Device Information: ${deviceInfo}\nAPI Key: ${apiKey}\nAPI Status: ${apiStatus}\nRefresh period: ${timerDelay}"
+            paragraph "Curent scene: ${currentScene}"
+            paragraph "Scene 1: ${scene1}\nScene 2: ${scene2}\nScene 3: ${scene3}"
+            paragraph "Panel IDs: ${panelIds}"
+            paragraph "Scene List: ${sceneList}"
         }
     }
 }
@@ -252,7 +257,7 @@ private pageSetupHelp() {
             paragraph "4. Get IP of your Nanoleaf and enter using the set IP and port option (don't worry about port unless you have changed the default)"
             paragraph "5. Hold the power button on your device for 5 seconds untill the control lights start flashing"
             paragraph "6. Select the get API key option, you will have about 30 seconds to do this"
-            paragraph "5. Refresh the data via the refresh option"
+            paragraph "7. Refresh the data via the refresh option"
         }
     }
 }
