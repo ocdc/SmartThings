@@ -203,8 +203,8 @@ def pageInformation() {
     def apiKey = selectedDevice.currentValue("retrievedAPIkey")
     def apiStatus = selectedDevice.currentValue("apiKeyStatus")
     def timerDelay = selectedDevice.currentValue("timerDelay")
-    def sceneList = selectedDevice.currentValue("scenesList")
-    def panelIds = selectedDevice.currentValue("panelIds")
+    def sceneList = selectedDevice.currentValue("scenesList").replaceAll("[", "").replaceAll("]", "")
+    def panelIds = selectedDevice.currentValue("panelIds").replaceAll(",", ", ")
 
     return dynamicPage(name: "pageInformation", title: "Nanoleaf Information", nextPage: "pageMain") {
         section ("${selectedDevice.name} Status Information") {
