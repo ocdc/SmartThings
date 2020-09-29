@@ -16,14 +16,9 @@
  /* Todo List
 	1. Set IP with update device ID
     2. Set port
-    3. Rename pages
-    4. Add all data to info page
-    5. Make logging more consistant
-    6. Rename scene favorites (day, evening, night etc.)
-    7. Refactor and optimise DTH
-    8. Add custom refresh time > Done
-    9. Rename SmartApp
-    10. Refactor an rename theNanoleaf variable > Done
+    3. Rename scene favorites (day, evening, night, relax, music relax, music party)
+    4. Refactor and optimise DTH
+    5. Rename SmartApp
  */
 
 definition(
@@ -40,20 +35,21 @@ definition(
 
 preferences {
     page(name: "pageMain")
-    page(name: "pickScene", title: "Select a Scene")   
-    page(name: "pageGetApi", title: "Get API Key")
-    page(name: "pageClearApi", title: "Clear API Key")
-    page(name: "setScene", title: "Scene Set")    
-    page(name: "pageSelectDevice", title: "Device Selection")
-    page(name: "pageInformation", title: "Device Information")
-    page(name: "idPanels", title: "Panel Identification")
-    page(name: "pageMissingData", title: "Missing Data")
-    page(name: "pageAcknowledgements", title: "Acknowledgements")
-    page(name: "pageSetupHelp", title: "Setup Help")
-    page(name: "pageRefresh", title: "Refresh")
-    page(name: "pageClearScenesAndPanelIds", title: "Clear Scenes and IDs")
-    page(name: "pageSetRefreshPeriod", title: "Set Refresh Period")
-    page(name: "pageSetRefreshPeriodConfirm", title: "Confirm Set Update Delay")
+    page(name: "pageSelectScene")
+    page(name: "pageSelectSceneConfirm")
+    page(name: "pageSetIpAndPort")
+    page(name: "pageGetApi")
+    page(name: "pageClearApi")
+    page(name: "pageSelectDevice")
+    page(name: "pageInformation")
+    page(name: "pageIdentifyPanels")
+    page(name: "pageMissingData")
+    page(name: "pageAcknowledgements")
+    page(name: "pageSetupHelp")
+    page(name: "pageRefresh")
+    page(name: "pageClearScenesAndPanelIds")
+    page(name: "pageSetRefreshPeriod")
+    page(name: "pageSetRefreshPeriodConfirm")
 }
 
 def installed() {
@@ -81,13 +77,14 @@ def pageMain() {
         }
     
         return dynamicPage(name: "pageMain", uninstall: true, install: true) {
-            section ("${selectedDevice.name} Selected Device"){
+            section (){
+                paragraph "Currently selected: ${selectedDevice.name}"
                 href(name: "pageSelectDevice", title: "Select a Device", required: false, page: "pageSelectDevice", description: "Tap to change selected device", image: "https://github.com/ocdc/SmartThings/raw/master/smartapps/ocdc/nanoleaf-management.src/menu-icons/select.png")
             }
             section ("Actions"){
                 if (presetsMap && presetsMap.name.size() > 0) {
-                    href(name: "sceneSelect", title: "Activate a Scene", required: false, page: "pickScene", description: "Tap to select a scene", image: "https://github.com/ocdc/SmartThings/raw/master/smartapps/ocdc/nanoleaf-management.src/menu-icons/activate.png")
-                    href(name: "panels", title: "Identify Panels", required: false, page: "idPanels", description: "Tap to identify panels", image: "https://github.com/ocdc/SmartThings/raw/master/smartapps/ocdc/nanoleaf-management.src/menu-icons/identify.png")
+                    href(name: "pageSelectScene", title: "Activate a Scene", required: false, page: "pageSelectScene", description: "Tap to select a scene", image: "https://github.com/ocdc/SmartThings/raw/master/smartapps/ocdc/nanoleaf-management.src/menu-icons/activate.png")
+                    href(name: "pageIdentifyPanels", title: "Identify Panels", required: false, page: "pageIdentifyPanels", description: "Tap to identify panels", image: "https://github.com/ocdc/SmartThings/raw/master/smartapps/ocdc/nanoleaf-management.src/menu-icons/identify.png")
                 } else {
                     href(name: "pageMissingData", title: "Missing Data", required: false, page: "pageMissingData", description: "Tap for more information", image: "https://github.com/ocdc/SmartThings/raw/master/smartapps/ocdc/nanoleaf-management.src/menu-icons/warning.png")
                 }
@@ -111,26 +108,30 @@ def pageMain() {
     } 
 }
 
-def pickScene() {
+def pageSelectScene() {
+    log.debug "Select Scene"
+
     def presetsMap = new groovy.json.JsonSlurper().parseText(selectedDevice.currentValue("presets"))
-    return dynamicPage(name: "pickScene", nextPage: "setScene") {
-        section ("${selectedDevice.name} Scenes"){
-            input name: "selectedScene", type: "enum", options: presetsMap.name, description: "Tap to select", defaultValue: "", required: no
+    return dynamicPage(name: "pageSelectScene", title: "Select Scene" nextPage: "pageSelectSceneConfirm") {
+        section (){
+            input "selectedScene", "enum", options: presetsMap.name, description: "Tap to select", defaultValue: "", required: no
         } 
     }
 }
 
-def setScene() {
-	log.debug "Setting A Scene ${selectedScene}"
+def pageSelectSceneConfirm() {
+	log.debug "Setting Scene to ${selectedScene}"
+
     selectedDevice.changeScene(selectedScene)
-    return dynamicPage(name: "setScene", nextPage: "pageMain") {
-        section("${selectedDevice.name} Scene \"${selectedScene}\" Set"){
+    return dynamicPage(name: "pageSelectSceneConfirm", title: "Scene Set", nextPage: "pageMain") {
+        section("Scene set to ${selectedScene}"){
         }
     }
 }
 
 def pageClearScenesAndPanelIds() {
 	log.debug "Clearing Scenes and Panel IDs"
+
     selectedDevice.clearScenesAndPanelIds()
     return dynamicPage(name: "pageClearScenesAndPanelIds", nextPage: "pageMain") {
         section("All Scenes and Panel IDs have been cleared, a data refresh will be needed sync current data"){
@@ -140,6 +141,7 @@ def pageClearScenesAndPanelIds() {
 
 def pageRefresh() {
 	log.debug "Refresh data"
+
     selectedDevice.refresh()
     return dynamicPage(name: "pageRefresh", title: "Refresh Data", nextPage: "pageMain") {
         section("A request to get current data has been sent"){
@@ -148,6 +150,8 @@ def pageRefresh() {
 }
 
 def pageSetRefreshPeriod() {
+    log.debug "Setting Refresh Period"
+
 	def delayList = [1, 5, 10, 15, 30]
     def currentTimerDelay = 5
     
@@ -156,21 +160,61 @@ def pageSetRefreshPeriod() {
     }
     
     return dynamicPage(name: "pageSetRefreshPeriod", title: "Select Refresh Period", nextPage: "pageSetRefreshPeriodConfirm") {
-        section(""){
-            input name: "timerDelay", type: "enum", options: delayList, title: "Tap to select", defaultValue: currentTimerDelay, required: no
+        section(){
+            input "timerDelay", "enum", options: delayList, title: "Tap to select", defaultValue: currentTimerDelay, required: no
         }
     }
 }
 
 def pageSetRefreshPeriodConfirm() {
+    log.debug "Setting Refresh Period to ${timerDelay}"
+
 	selectedDevice.setTimerDelay(timerDelay)
-    return dynamicPage(name: "pageSetRefreshPeriodConfirm", title: "Refresh Period", nextPage: "pageMain") {
+    return dynamicPage(name: "pageSetRefreshPeriodConfirm", title: "Refresh Period Set", nextPage: "pageMain") {
         section("Refresh period has been set to ${timerDelay}"){
         }
     }
 }
 
+def pageSetIpAndPort() {
+    log.debug "Set IP and Port Device"
+
+    def currentIpAddress = null
+    def currentPort = null
+
+    if (selectedDevice.currentValue("ipAddress")?.trim()) {
+        currentIpAddress = selectedDevice.currentValue("ipAddress")
+    } else {
+        currentIpAddress = "192.168.1.1"
+    }
+
+    if (selectedDevice.currentValue("port")?.trim()) {
+        currentIpAddress = selectedDevice.currentValue("port")
+    } else {
+        currentIpAddress = "16021"
+    }
+
+    return dynamicPage(name: "pageSetIpAndPort", title: "Set IP and Port Device", nextPage: "pageSetIpAndPortConfirm") {
+        section() {
+            input "ipAddress", "text", required: true, title: "Tap to enter", defaultValue: currentIpAddress
+            input "port", "text", required: true, title: "Tap to enter", defaultValue: currentPort
+        }
+    }
+}
+
+def pageSetIpAndPortConfirm() {
+    log.debug "Set IP and Port Device"
+
+    return dynamicPage(name: "pageSetIpAndPortConfirm", title: "Set IP and Port Device", nextPage: "pageMain") {
+        section() {
+            input "selectedDevice", "device.NanoleafAuroraSmarterAPI", multiple: false, required: true, title: "Tap to select"
+        }
+    }
+}
+
 def pageGetApi() {
+    log.debug "Getting API Key"
+
     selectedDevice.requestAPIkey()
     return dynamicPage(name: "pageGetApi", title: "Request API Key", nextPage: "pageMain") {
         section ("An API Key for ${selectedDevice.name} has been requested"){
@@ -179,6 +223,8 @@ def pageGetApi() {
 }
 
 def pageClearApi() {
+    log.debug "Clearing API Key"
+
     selectedDevice.clearApiKey()
     return dynamicPage(name: "pageClearApi", title: "Clear API Key", nextPage: "pageMain") {
         section ("The API Key for ${selectedDevice.name} has been removed"){
@@ -187,14 +233,18 @@ def pageClearApi() {
 }
 
 def pageSelectDevice() {
+    log.debug "Select Device"
+
     return dynamicPage(name: "pageSelectDevice", title: "Select Device", nextPage: "pageMain") {
-        section("") {
+        section() {
             input "selectedDevice", "device.NanoleafAuroraSmarterAPI", multiple: false, required: true, title: "Tap to select"
         }
     }
 }
 
 def pageInformation() {
+    log.debug "View Information"
+
     def scene1 = selectedDevice.currentValue("scene1")
     def scene2 = selectedDevice.currentValue("scene2")
     def scene3 = selectedDevice.currentValue("scene3")
@@ -203,12 +253,12 @@ def pageInformation() {
     def apiKey = selectedDevice.currentValue("retrievedAPIkey")
     def apiStatus = selectedDevice.currentValue("apiKeyStatus")
     def timerDelay = selectedDevice.currentValue("timerDelay")
-    def sceneList = selectedDevice.currentValue("scenesList").replaceAll("[", "").replaceAll("]", "")
+    def sceneList = selectedDevice.currentValue("scenesList").replaceAll("[^a-zA-Z0-9, ]+","")
     def panelIds = selectedDevice.currentValue("panelIds").replaceAll(",", ", ")
 
-    return dynamicPage(name: "pageInformation", title: "Nanoleaf Information", nextPage: "pageMain") {
-        section ("${selectedDevice.name} Status Information") {
-            paragraph "Device Information: ${deviceInfo}\nAPI Key: ${apiKey}\nAPI Status: ${apiStatus}\nRefresh period: ${timerDelay}"
+    return dynamicPage(name: "pageInformation", title: "Device Information", nextPage: "pageMain") {
+        section () {
+            paragraph "Main Information: ${deviceInfo}\nAPI Status: ${apiStatus}\nAPI Key: ${apiKey}\nRefresh period: ${timerDelay}"
             paragraph "Curent scene: ${currentScene}"
             paragraph "Scene 1: ${scene1}\nScene 2: ${scene2}\nScene 3: ${scene3}"
             paragraph "Panel IDs: ${panelIds}"
@@ -217,29 +267,34 @@ def pageInformation() {
     }
 }
 
-def idPanels() {
+def pageIdentifyPanels() {
+    log.debug "Identify Panels"
+
     def panels = selectedDevice.currentValue("panelIds").split(",")
-    def colors = ["Red","Blue","Green","Yellow","Orange","Pink","Purple","Black","White"]
+    def colors = ["Red", "Blue", "Green", "Yellow", "Orange", "Pink", "Purple", "Black", "White"]
     def setColor
     def colorIndex = 0
     def setNumber = 0
     def pageText = "${selectedDevice.name} panels:"
-    for (int i = 0; i < panels.size();i++) {
+
+    for (int i = 0; i < panels.size(); i++) {
         if (colorIndex == 8) {setNumber++}
-        colorIndex = i - (9*setNumber)	
+        colorIndex = i - (9 * setNumber)	
         setColor = colors[colorIndex]
         pageText = "${pageText}\nPanel Id ${panels[i]} is ${colors[colorIndex]}"
         selectedDevice.setPanelColor(panels[i], colors[colorIndex], false)
     }
 
-    return dynamicPage(name: "idPanels", title: "${selectedDevice.name} Panel Identification", nextPage: "pageMain") {
-        section ("${selectedDevice.name} Panels") {
+    return dynamicPage(name: "pageIdentifyPanels", title: "Identify Panels", nextPage: "pageMain") {
+        section () {
             paragraph pageText
         }
     }
 }
 
 private pageMissingData() {
+    log.debug "Missing data"
+
 	return dynamicPage(name: "pageMissingData", title: "Missing Data", nextPage: "pageMain") {
         section() {
             paragraph "Data hasn't been fully loaded yet, assuming the details are correct you can use the refresh option to force a data refresh"
