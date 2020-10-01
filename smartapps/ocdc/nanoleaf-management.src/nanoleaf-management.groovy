@@ -14,11 +14,9 @@
  */
  
  /* Todo List
-	1. Set IP with update device ID
-    2. Set port
-    3. Rename scene favorites (day, evening, night, relax, music relax, music party)
-    4. Refactor and optimise DTH
-    5. Rename SmartApp
+    1. Rename scene favorites (day, evening, night, relax, music relax, music party)
+    2. Refactor and optimise DTH
+    3. Rename SmartApp
  */
 
 definition(
@@ -38,6 +36,7 @@ preferences {
     page(name: "pageSelectScene")
     page(name: "pageSelectSceneConfirm")
     page(name: "pageSetIpAndPort")
+    page(name: "pageSetIpAndPortConfirm")
     page(name: "pageGetApi")
     page(name: "pageClearApi")
     page(name: "pageSelectDevice")
@@ -112,7 +111,7 @@ def pageSelectScene() {
     log.debug "Select Scene"
 
     def presetsMap = new groovy.json.JsonSlurper().parseText(selectedDevice.currentValue("presets"))
-    return dynamicPage(name: "pageSelectScene", title: "Select Scene" nextPage: "pageSelectSceneConfirm") {
+    return dynamicPage(name: "pageSelectScene", title: "Select Scene", nextPage: "pageSelectSceneConfirm") {
         section (){
             input "selectedScene", "enum", options: presetsMap.name, description: "Tap to select", defaultValue: "", required: no
         } 
@@ -189,15 +188,15 @@ def pageSetIpAndPort() {
     }
 
     if (selectedDevice.currentValue("port")?.trim()) {
-        currentIpAddress = selectedDevice.currentValue("port")
+        currentPort = selectedDevice.currentValue("port")
     } else {
-        currentIpAddress = "16021"
+        currentPort = "16021"
     }
 
-    return dynamicPage(name: "pageSetIpAndPort", title: "Set IP and Port Device", nextPage: "pageSetIpAndPortConfirm") {
+    return dynamicPage(name: "pageSetIpAndPort", title: "Set IP Address and Port", nextPage: "pageSetIpAndPortConfirm") {
         section() {
-            input "ipAddress", "text", required: true, title: "Tap to enter", defaultValue: currentIpAddress
-            input "port", "text", required: true, title: "Tap to enter", defaultValue: currentPort
+            input "ipAddress", "text", required: true, title: "Enter IP address", defaultValue: currentIpAddress
+            input "port", "text", required: true, title: "Enter port (Default is 16021)", defaultValue: currentPort
         }
     }
 }
@@ -205,9 +204,9 @@ def pageSetIpAndPort() {
 def pageSetIpAndPortConfirm() {
     log.debug "Set IP and Port Device"
 
-    return dynamicPage(name: "pageSetIpAndPortConfirm", title: "Set IP and Port Device", nextPage: "pageMain") {
-        section() {
-            input "selectedDevice", "device.NanoleafAuroraSmarterAPI", multiple: false, required: true, title: "Tap to select"
+    selectedDevice.setIpAddressAndPort(ipAddress, port)
+    return dynamicPage(name: "pageSetIpAndPortConfirm", title: "IP Address and Port Set", nextPage: "pageMain") {
+        section("IP address has been set to ${ipAddress} and port has been set to ${port}") {
         }
     }
 }
