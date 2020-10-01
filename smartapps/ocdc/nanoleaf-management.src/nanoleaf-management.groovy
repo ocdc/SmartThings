@@ -178,25 +178,24 @@ def pageSetRefreshPeriodConfirm() {
 def pageSetIpAndPort() {
     log.debug "Set IP and Port Device"
 
-    def currentIpAddress = null
-    def currentPort = null
+    def currentIpAddress = selectedDevice.currentValue("ipAddress")
+    def currentPort = selectedDevice.currentValue("port")
+    def defaultIpAddress = null
+    def defaultPort = null
 
-    if (selectedDevice.currentValue("ipAddress")?.trim()) {
-        currentIpAddress = selectedDevice.currentValue("ipAddress")
-    } else {
-        currentIpAddress = "192.168.1.1"
+    if (currentIpAddress?.trim()) {
+        defaultIpAddress = selectedDevice.currentValue("ipAddress")
     }
 
-    if (selectedDevice.currentValue("port")?.trim()) {
-        currentPort = selectedDevice.currentValue("port")
-    } else {
-        currentPort = "16021"
+    if (currentPort?.trim()) {
+        defaultPort = selectedDevice.currentValue("port")
     }
 
     return dynamicPage(name: "pageSetIpAndPort", title: "Set IP Address and Port", nextPage: "pageSetIpAndPortConfirm") {
         section() {
-            input "ipAddress", "text", required: true, title: "Enter IP address", defaultValue: currentIpAddress
-            input "port", "text", required: true, title: "Enter port (Default is 16021)", defaultValue: currentPort
+            paragraph "If IP and port have been changed directly in the device they may not be correct below. Current values directly from the device are:\nIP: ${currentIp}\nPort: ${currentPort}"
+            input "ipAddress", "text", required: true, title: "Enter IP address", defaultValue: defaultIpAddress
+            input "port", "text", required: true, title: "Enter port (Default is 16021)", defaultValue: defaultPort
         }
     }
 }
